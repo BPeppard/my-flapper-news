@@ -1,0 +1,15 @@
+{
+  "name": "MyFlapperNews",
+  "version": "0.0.0",
+  "homepage": "https://github.com/BPeppard/my-flapper-news",
+  "authors": [
+    "Brian Peppard <BJPeppard@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.4.4",
+    "angular-mocks": "~1.4.4",
+    "bootstrap": "~3.3.5"
+  }
+}

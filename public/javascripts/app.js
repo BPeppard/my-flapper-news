@@ -1,5 +1,8 @@
 'use strict';
+/* global angular */
 
-var flapperNewsApp = angular.module('flapperNewsApp', [
-
+var flapperNewsApp = angular.module('flapperApp', [
+  'myFlapperControllers'
 ]);
+
+//flapperNewsApp.config([]);
