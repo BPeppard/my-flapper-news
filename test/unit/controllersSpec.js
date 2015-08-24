@@ -20,9 +20,11 @@ describe('MyFlapperNews controllers', function() {
     it('should add a post', function() {
       expect(scope.posts.length).toEqual(5);
       scope.title = 'New Post';
+      scope.link = 'New Link';
       scope.addPost();
       expect(scope.posts.length).toEqual(6);
       expect(scope.posts[5].title).toEqual('New Post');
+      expect(scope.posts[5].link).toEqual('New Link');
     });
 
     it('should increment votes count when incrementer clicked', function() {

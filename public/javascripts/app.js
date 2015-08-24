@@ -2,7 +2,8 @@
 /* global angular */
 
 var flapperNewsApp = angular.module('flapperApp', [
-  'myFlapperControllers'
+  'myFlapperControllers',
+  'myFlapperServices'
 ]);
 
 //flapperNewsApp.config([]);
