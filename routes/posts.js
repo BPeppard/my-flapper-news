@@ -1,11 +1,11 @@
 'use strict';
 
 var express = require('express');
-var router = express.Router();
+var router = express.Router(); //eslint-disable-line
 var mongoose = require('mongoose');
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
-var passport = require('passport');
+//var passport = require('passport');
 var jwt = require('express-jwt');
 var auth = jwt({secret: 'AWESOMESECRET', requestProperty: 'payload'});
 
@@ -69,7 +69,7 @@ router.post('/:post/comments', auth, function(req, res, next) {
   comment.save(function(err, comment) {
     if (err) { return next(err); }
     req.post.comments.push(comment);
-    req.post.save(function(err, post) {
+    req.post.save(function(err) {
       if (err) { return next(err); }
       res.json(comment);
     });
