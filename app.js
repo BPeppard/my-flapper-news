@@ -5,8 +5,20 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var mongoose = require('mongoose');
+require('./models/Posts');
+require('./models/Comments');
+require('./models/Users');
+mongoose.connect('mongodb://localhost/my-flapper-news');
+
+var passport = require('passport');
+require('./passport.config');
+
+
 var routes = require('./routes/index');
+var posts = require('./routes/posts');
 var users = require('./routes/users');
+var partials = require('./routes/partials');
 
 var app = express();
 
@@ -23,7 +35,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
 
+app.use(passport.initialize());
+
+app.use('/partials', partials);
 app.use('/', routes);
+app.use('/posts', posts);
 app.use('/users', users);
 
 // catch 404 and forward to error handler

@@ -1,0 +1,21 @@
+.page-header
+  h3
+    a(ng-show="post.link" href="{{post.link}}") {{post.title}}
+    span(ng-hide="post.link") {{post.title}}
+div(ng-repeat="comment in post.comments | orderBy: '-upvotes'")
+  span.glyphicon.glyphicon-thumbs-up(ng-click="incrementUpvotes(comment)")
+  | {{comment.upvotes}} - by {{comment.author}}
+  span(style="font-size:20px; margin-left:10px;") {{comment.body}}
+
+div(ng-hide="isLoggedIn()")
+  h3 You need to
+    a(href="/#/login")  Log In
+    |  or
+    a(href="/#/register")  Register
+    |  before you can add a comment.
+
+form(ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top:30px;")
+  h3 Add a new comment
+  .form-group
+    input.form-control(type="text" placeholder="Comment" ng-model="body")
+  button.btn.btn-primary(type="submit") Post

@@ -4,9 +4,15 @@
 describe('MyFlapperNews controllers', function() {
 
   beforeEach(module('flapperApp'));
+  beforeEach(module('myFlapperServices'));
 
   describe('MainCtrl', function() {
-    var scope, ctrl;
+    var scope, ctrl,
+      addPost = function(scope) {
+        scope.title = 'New Post';
+        scope.link = 'New Link';
+        scope.addPost();
+      };
 
     beforeEach(inject(function($rootScope, $controller) {
       scope = $rootScope.$new();
@@ -14,24 +20,25 @@ describe('MyFlapperNews controllers', function() {
     }));
 
     it('should create a "posts" model', function() {
-      expect(scope.posts.length).toEqual(5);
+      expect(scope.posts.length).toEqual(0);
     });
 
     it('should add a post', function() {
-      expect(scope.posts.length).toEqual(5);
+      expect(scope.posts.length).toEqual(0);
       scope.title = 'New Post';
       scope.link = 'New Link';
       scope.addPost();
-      expect(scope.posts.length).toEqual(6);
-      expect(scope.posts[5].title).toEqual('New Post');
-      expect(scope.posts[5].link).toEqual('New Link');
+      expect(scope.posts.length).toEqual(1);
+      expect(scope.posts[0].title).toEqual('New Post');
+      expect(scope.posts[0].link).toEqual('New Link');
     });
 
     it('should increment votes count when incrementer clicked', function() {
+      addPost(scope);
       var post = scope.posts[0];
-      expect(post.upvotes).toEqual(5);
+      expect(post.upvotes).toEqual(0);
       scope.incrementUpvotes(post);
-      expect(post.upvotes).toEqual(6);
+      expect(post.upvotes).toEqual(1);
     });
   });
 
