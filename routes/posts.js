@@ -83,6 +83,13 @@ router.put('/:post/upvote', auth, function(req, res, next) {
   });
 });
 
+router.put('/:post/downvote', auth, function(req, res, next) {
+  req.post.downvote(function(err, post) {
+    if (err) { return next(err); }
+    res.json(post);
+  });
+});
+
 router.put('/:post/comments/:comment/upvote', auth, function(req, res, next) {
   req.comment.upvote(function(err, comment) {
     if (err) { return next(err); }

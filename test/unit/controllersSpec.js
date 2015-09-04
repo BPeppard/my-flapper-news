@@ -1,44 +1,81 @@
 'use strict';
-/*global describe, it, beforeEach, inject, expect */
+/*global describe, it, beforeEach, inject, expect, jasmine */
 
 describe('MyFlapperNews controllers', function() {
 
-  beforeEach(module('flapperApp'));
-  beforeEach(module('myFlapperServices'));
+  beforeEach(function() {
+      module('flapperApp');
+      module(function($provide) {
+        $provide.service('postSvc', function() {
+          this.posts = [];
+          this.getAll = jasmine.createSpy('getAll').and.callFake(function() {
+            /*eslint-disable */
+            return [{
+              "_id":"test1",
+              "title":"Test Post 1",
+              "link":"http://test.post1.com",
+              "comments":["55ddb5a97a22c23c20063fd1"],
+              "upvotes":0
+            },{
+              "_id":"test2",
+              "title":"Test Post 2",
+              "link":"http://test.post2.com",
+              "comments":["55de255994e45a082247f73d"],
+              "upvotes":0
+            }];
+          });
+          this.create = jasmine.createSpy('create');
+          this.upvote = jasmine.createSpy('upvote');
+          this.downvote = jasmine.createSpy('downvote');
+          /*eslint-enable */
+        });
+      });
+  });
+  /* trying to mock this service */
+  //beforeEach(module('myFlapperServices'));
+
 
   describe('MainCtrl', function() {
-    var scope, ctrl,
-      addPost = function(scope) {
+    var scope, ctrl, mockPostSvc,
+    post = {
+      title: 'Test Post',
+      link: 'http://www.test.com',
+      upvotes: 0
+    };
+
+    beforeEach(inject(function($rootScope, $controller, postSvc) {
+      scope = $rootScope.$new();
+      ctrl = $controller('MainCtrl', {$scope: scope, Post: postSvc});
+      mockPostSvc = postSvc;
+    }));
+
+    // it('should create a "posts" model', function() {
+    //   expect(scope.posts.length).toEqual(2);
+    // });
+
+    describe('when adding a post', function() {
+      it('should fail if there is no title', function() {
+        scope.title = '';
+        scope.link = 'New Link';
+        scope.addPost();
+        expect(mockPostSvc.create).not.toHaveBeenCalled();
+      });
+      it('should create a post if there is a title', function() {
         scope.title = 'New Post';
         scope.link = 'New Link';
         scope.addPost();
-      };
-
-    beforeEach(inject(function($rootScope, $controller) {
-      scope = $rootScope.$new();
-      ctrl = $controller('MainCtrl', {$scope: scope});
-    }));
-
-    it('should create a "posts" model', function() {
-      expect(scope.posts.length).toEqual(0);
-    });
-
-    it('should add a post', function() {
-      expect(scope.posts.length).toEqual(0);
-      scope.title = 'New Post';
-      scope.link = 'New Link';
-      scope.addPost();
-      expect(scope.posts.length).toEqual(1);
-      expect(scope.posts[0].title).toEqual('New Post');
-      expect(scope.posts[0].link).toEqual('New Link');
+        expect(mockPostSvc.create).toHaveBeenCalled();
+      });
     });
 
     it('should increment votes count when incrementer clicked', function() {
-      addPost(scope);
-      var post = scope.posts[0];
-      expect(post.upvotes).toEqual(0);
       scope.incrementUpvotes(post);
-      expect(post.upvotes).toEqual(1);
+      expect(mockPostSvc.upvote).toHaveBeenCalled();
+    });
+
+    it('should call the service to decrement the count when clicked', function() {
+      scope.decrementUpvotes(post);
+      expect(mockPostSvc.downvote).toHaveBeenCalled();
     });
   });
 

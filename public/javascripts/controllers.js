@@ -21,6 +21,9 @@ myFlapperControllers.controller('MainCtrl', ['$scope', 'Post', 'Authenticate', f
   $scope.incrementUpvotes = function(post) {
     Post.upvote(post);
   };
+  $scope.decrementUpvotes = function(post) {
+    Post.downvote(post);
+  };
 }]);
 
 myFlapperControllers.controller('PostsCtrl', [

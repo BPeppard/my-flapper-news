@@ -14,4 +14,9 @@ PostSchema.methods.upvote = function(callback) {
   this.save(callback);
 };
 
+PostSchema.methods.downvote = function(callback) {
+  this.upvotes -= 1;
+  this.save(callback);
+};
+
 mongoose.model('Post', PostSchema);
