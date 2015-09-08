@@ -27,6 +27,26 @@ describe('MyFlapperNews controllers', function() {
           this.create = jasmine.createSpy('create');
           this.upvote = jasmine.createSpy('upvote');
           this.downvote = jasmine.createSpy('downvote');
+          this.addComment = jasmine.createSpy('addComment').and.callFake(function(){
+            return {
+              "__v":0,
+              "post":{
+                "_id":"55de254e94e45a082247f73c",
+                "title":"b",
+                "link":"c",
+                "__v":2,
+                "comments":[
+                  "55de255994e45a082247f73d",
+                  "55e9fe9bf8ff5efc1f89a0f4"
+                ],
+                "upvotes":4
+              },
+              "body":"another cool comment",
+              "author":"fakeuser",
+              "_id":"55e9fe9bf8ff5efc1f89a0f4",
+              "upvotes":0
+            };
+          });
           /*eslint-enable */
         });
       });
@@ -48,10 +68,6 @@ describe('MyFlapperNews controllers', function() {
       ctrl = $controller('MainCtrl', {$scope: scope, Post: postSvc});
       mockPostSvc = postSvc;
     }));
-
-    // it('should create a "posts" model', function() {
-    //   expect(scope.posts.length).toEqual(2);
-    // });
 
     describe('when adding a post', function() {
       it('should fail if there is no title', function() {
@@ -76,6 +92,35 @@ describe('MyFlapperNews controllers', function() {
     it('should call the service to decrement the count when clicked', function() {
       scope.decrementUpvotes(post);
       expect(mockPostSvc.downvote).toHaveBeenCalled();
+    });
+  });
+
+  describe('Post Controller', function() {
+    var scope, ctrl, mockPostSvc,
+    post = {
+      _id: 'testPost1',
+      title: 'Test Post',
+      link: 'http://www.test.com',
+      upvotes: 0
+    };
+
+    beforeEach(inject(function($rootScope, $controller, postSvc) {
+      scope = $rootScope.$new();
+      ctrl = $controller('PostsCtrl', {$scope: scope, Post: postSvc, post: post});
+      mockPostSvc = postSvc;
+    }));
+
+    describe('when adding a new comment', function() {
+      it('should not create a comment if the comment is empty', function() {
+        scope.body = '';
+        scope.addComment();
+        expect(mockPostSvc.addComment).not.toHaveBeenCalled();
+      });
+      it('should create a comment if the comment has data', function() {
+        scope.body = 'This is an awesome comment';
+        scope.addComment();
+        expect(mockPostSvc.addComment).toHaveBeenCalled();
+      });
     });
   });
 
