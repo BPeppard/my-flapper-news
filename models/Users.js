@@ -7,7 +7,8 @@ var jwt = require('jsonwebtoken');
 var UserSchema = new mongoose.Schema({
   username: {type: String, lowercase: true, unique: true},
   hash: String,
-  salt: String
+  salt: String,
+  votes: [String]
 });
 
 UserSchema.methods.setPassword = function(password) {
@@ -29,6 +30,21 @@ UserSchema.methods.generateJWT = function() {
     username: this.username,
     exp: parseInt(exp.getTime() / 1000)
   }, 'AWESOMESECRET');
+};
+
+UserSchema.methods.addVote = function(id, callback) {
+  this.votes.push(id);
+  this.save(callback);
+};
+
+UserSchema.methods.canVote = function(id) {
+  console.log('canVote: checking for ' + id);
+  console.log(this.votes);
+  if (this.votes.indexOf(id) >= 0) {
+    return false;
+  } else {
+    return true;
+  }
 };
 
 mongoose.model('User', UserSchema);
