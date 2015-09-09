@@ -12,6 +12,7 @@ div(ng-repeat="post in posts | orderBy: '-upvotes'")
       a {{post.author}} |
     span(style="padding-left: 10px;")
       a(href="#/posts/{{post._id}}") Comments
+      | ({{post.comments.length}})
 
 div(ng-hide="isLoggedIn()")
   h3 You need to
