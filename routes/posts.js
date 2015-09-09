@@ -97,4 +97,11 @@ router.put('/:post/comments/:comment/upvote', auth, function(req, res, next) {
   });
 });
 
+router.put('/:post/comments/:comment/downvote', auth, function(req, res, next) {
+  req.comment.downvote(function(err, comment) {
+    if (err) { return next(err); }
+    res.json(comment);
+  });
+});
+
 module.exports = router;

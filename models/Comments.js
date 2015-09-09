@@ -1,3 +1,5 @@
+'use strict';
+
 var mongoose = require('mongoose');
 
 var CommentSchema = new mongoose.Schema({
@@ -9,6 +11,11 @@ var CommentSchema = new mongoose.Schema({
 
 CommentSchema.methods.upvote = function(callback) {
   this.upvotes += 1;
+  this.save(callback);
+};
+
+CommentSchema.methods.downvote = function(callback) {
+  this.upvotes -= 1;
   this.save(callback);
 };
 

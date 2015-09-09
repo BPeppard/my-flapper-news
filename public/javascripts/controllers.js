@@ -43,13 +43,17 @@ myFlapperControllers.controller('PostsCtrl', [
       Post.addComment(post._id, {
         body: $scope.body,
         author: 'user'
-      }).success(function(comment) {
+      }).then(function(response) {
+        var comment = response.data;
         $scope.post.comments.push(comment);
       });
       $scope.body = '';
     };
     $scope.incrementUpvotes = function (comment) {
       Post.upvoteComment(post, comment);
+    };
+    $scope.decrementUpvotes = function(comment) {
+      Post.downvoteComment(post, comment);
     };
   }]);
 

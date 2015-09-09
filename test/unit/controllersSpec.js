@@ -6,7 +6,7 @@ describe('MyFlapperNews controllers', function() {
   beforeEach(function() {
       module('flapperApp');
       module(function($provide) {
-        $provide.service('postSvc', function() {
+        $provide.service('postSvc', function($q) {
           this.posts = [];
           this.getAll = jasmine.createSpy('getAll').and.callFake(function() {
             /*eslint-disable */
@@ -28,7 +28,8 @@ describe('MyFlapperNews controllers', function() {
           this.upvote = jasmine.createSpy('upvote');
           this.downvote = jasmine.createSpy('downvote');
           this.addComment = jasmine.createSpy('addComment').and.callFake(function(){
-            return {
+            var deferred = $q.defer();
+            deferred.resolve({
               "__v":0,
               "post":{
                 "_id":"55de254e94e45a082247f73c",
@@ -45,8 +46,11 @@ describe('MyFlapperNews controllers', function() {
               "author":"fakeuser",
               "_id":"55e9fe9bf8ff5efc1f89a0f4",
               "upvotes":0
-            };
+            });
+            return deferred.promise;
           });
+          this.upvoteComment = jasmine.createSpy('upvoteComment');
+          this.downvoteComment = jasmine.createSpy('downvoteComment');
           /*eslint-enable */
         });
       });
@@ -96,15 +100,32 @@ describe('MyFlapperNews controllers', function() {
   });
 
   describe('Post Controller', function() {
-    var scope, ctrl, mockPostSvc,
+    var scope, ctrl, mockPostSvc, rootScope,
     post = {
       _id: 'testPost1',
       title: 'Test Post',
       link: 'http://www.test.com',
       upvotes: 0
+    },
+    comment = {
+      "post":{
+        "_id":"testPost1",
+        "title":"Test Post 1",
+        "link":"c",
+        "comments":[
+          "55de255994e45a082247f73d",
+          "55e9fe9bf8ff5efc1f89a0f4"
+        ],
+        "upvotes":4
+      },
+      "body":"another cool comment",
+      "author":"fakeuser",
+      "_id":"testComment1",
+      "upvotes":0
     };
 
     beforeEach(inject(function($rootScope, $controller, postSvc) {
+      rootScope = $rootScope;
       scope = $rootScope.$new();
       ctrl = $controller('PostsCtrl', {$scope: scope, Post: postSvc, post: post});
       mockPostSvc = postSvc;
@@ -118,9 +139,22 @@ describe('MyFlapperNews controllers', function() {
       });
       it('should create a comment if the comment has data', function() {
         scope.body = 'This is an awesome comment';
+        scope.post.comments = [];
         scope.addComment();
+        rootScope.$digest();
         expect(mockPostSvc.addComment).toHaveBeenCalled();
+        expect(scope.post.comments.length).toEqual(1);
       });
+    });
+
+    it('should increment votes count when incrementer clicked', function() {
+      scope.incrementUpvotes(comment);
+      expect(mockPostSvc.upvoteComment).toHaveBeenCalled();
+    });
+
+    it('should call the service to decrement the count when clicked', function() {
+      scope.decrementUpvotes(comment);
+      expect(mockPostSvc.downvoteComment).toHaveBeenCalled();
     });
   });
 

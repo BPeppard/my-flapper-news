@@ -49,9 +49,17 @@ myFlapperServices.factory('Post', ['$http', 'Authenticate', function($http, Auth
     return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote', null, {
       headers: {Authorization: 'Bearer ' + Authenticate.getToken()}
     })
-      .success(function() {
+      .then(function() {
         comment.upvotes += 1;
       });
+  };
+  o.downvoteComment = function(post, comment) {
+    return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/downvote', null, {
+      headers: {Authorization: 'Bearer ' + Authenticate.getToken()}
+    })
+    .then(function() {
+      comment.upvotes -= 1;
+    });
   };
   return o;
 }]);
