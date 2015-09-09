@@ -16,7 +16,9 @@ div(ng-hide="isLoggedIn()")
     |  before you can add a comment.
 
 form(ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top:30px;")
-  h3 Add a new comment
-  .form-group
-    input.form-control(type="text" placeholder="Comment" ng-model="body")
-  button.btn.btn-primary(type="submit") Post
+  h3
+    a(ng-click="toggleNewComment()") Add a new comment
+  div(ng-show="showNewComment")
+    .form-group
+      input.form-control(type="text" placeholder="Comment" ng-model="body")
+    button.btn.btn-primary(type="submit") Post

@@ -5,6 +5,7 @@
 var myFlapperControllers = angular.module('myFlapperControllers', []);
 
 myFlapperControllers.controller('MainCtrl', ['$scope', 'Post', 'Authenticate', function($scope, Post, Authenticate) {
+  $scope.showNewPost = false;
   $scope.posts = Post.posts;
   $scope.isLoggedIn = Authenticate.isLoggedIn;
   $scope.addPost = function() {
@@ -24,6 +25,9 @@ myFlapperControllers.controller('MainCtrl', ['$scope', 'Post', 'Authenticate', f
   $scope.decrementUpvotes = function(post) {
     Post.downvote(post);
   };
+  $scope.toggleNewPost = function() {
+    $scope.showNewPost = !$scope.showNewPost;
+  };
 }]);
 
 myFlapperControllers.controller('PostsCtrl', [
@@ -34,6 +38,7 @@ myFlapperControllers.controller('PostsCtrl', [
   'Authenticate',
   function($scope, $routeParams, Post, post, Authenticate) {
     //$scope.post = Post.posts[$routeParams.id];
+    $scope.showNewComment = false;
     $scope.post = post;
     $scope.isLoggedIn = Authenticate.isLoggedIn;
     $scope.addComment = function() {
@@ -54,6 +59,9 @@ myFlapperControllers.controller('PostsCtrl', [
     };
     $scope.decrementUpvotes = function(comment) {
       Post.downvoteComment(post, comment);
+    };
+    $scope.toggleNewComment = function() {
+      $scope.showNewComment = !$scope.showNewComment;
     };
   }]);
 

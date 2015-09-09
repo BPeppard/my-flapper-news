@@ -22,9 +22,11 @@ div(ng-hide="isLoggedIn()")
     |  before you can add a post
 
 form(ng-submit="addPost()" ng-show="isLoggedIn()" style="margin-top:30px;")
-  h3 Add a new post
-  .form-group
-    input.form-control(type="text", ng-model="title", placeholder="Title")
-  .form-group
-    input.form-control(type="text", ng-model="link", placeholder="Link")
-  button.btn.btn-primary(type="submit") Post
+  h3
+    a(ng-click="toggleNewPost()") Add a new post
+  div(ng-show="showNewPost")
+    .form-group
+      input.form-control(type="text", ng-model="title", placeholder="Title")
+    .form-group
+      input.form-control(type="text", ng-model="link", placeholder="Link")
+    button.btn.btn-primary(type="submit") Post
